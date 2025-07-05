@@ -26,10 +26,10 @@ public:
 	}
 
 	//				Constructors:
-	explicit String(int size = 80)
+	explicit String(int size = 80):size(size), str(new char[this->size]{})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 #ifdef DEBUG
 		cout << "DefaultConstructor:\t" << this << endl;
 #endif // DEBUG
@@ -56,10 +56,10 @@ public:
 		cout << "CopyConstructor:\t" << this << endl;
 #endif // DEBUG
 	}
-	String(String&& other)
+	String(String&& other):size(other.size), str(other.str)
 	{
-		this->size = other.size;
-		this->str = other.str;
+		//this->size = other.size;
+		//this->str = other.str;
 		other.size = 0;
 		other.str = nullptr;	//«ащищаем пам€ть от удалени€ деструктором.
 #ifdef DEBUG
@@ -200,27 +200,7 @@ void main()
 	cout << str << endl;
 #endif // ISTREAM_OPERATOR
 
-	String text = R"(When a return statement contains an expression of non-primitive type, its execution copies the expression result into the return slot of the calling function. The compiler invokes the copy or move constructor of the returned type. Then, as the function is exited, destructors for function-local variables are called, which includes any variables named in the expression.
-		The C++ standard allows(but doesn't require) the compiler to optionally construct the returned object directly in the return slot of the calling function. This construction skips (or elides) the copy or move constructor executed as part of the return statement. Unlike most other optimizations, this transformation is allowed to have an observable effect on the program's output.Namely, the copy or move constructor and associated destructor are called one less time.The standard still requires that the named returned variable has a defined copy or move constructor, even if the compiler elides the constructor in all cases.
-			In versions before Visual Studio 2022 version 17.4, when optimizations are disabled(such as under / Od or in functions marked #pragma optimize("", off)) the compiler only performs mandatory copy and move elision.Under / O2, the older compilers perform optional copy or move elision on return of a named variable in an optimized function when all of these conditions are met : it has no loops or exception handling, it doesn't return multiple symbols with overlapping lifetimes, the type's copy or move constructor doesn't have default arguments.
-			Visual Studio 2022 version 17.4 increases the number of places where the compiler does optional copy or move elisions under / Zc : nrvo, whether enabled explicitly, or automatically by using the / O2, / permissive - , or /std : c++20 or later options.Under / Zc : nrvo, the compiler performs optional copy or move elision on return of a named variable for any function when : it has no loops or exception handling(as before); it returns the variable from a loop; it has exception handling; the returned type's copy or move constructor has default arguments. Optional copy or move elisions are never done when /Zc:nrvo- is applied, or when the function returns multiple symbols with overlapping lifetimes, or for a throw of a named variable.)";
-	cout << text.get_size() << endl;
 
-	const int SIZE = 100000;
-	String arr[SIZE]{};
-	String get_text(const String & other);
-	for (int i = 0; i < SIZE; i++)
-	{
-		arr[i] = get_text(text);
-	}
-	cout << "DONE" << endl;
-}
-
-String get_text(const String& other)
-{
-	String local = other;
-	return local;
-}
 
 /*
 ---------------------------------
