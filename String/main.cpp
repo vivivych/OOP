@@ -34,11 +34,9 @@ public:
 		cout << "DefaultConstructor:\t" << this << endl;
 #endif // DEBUG
 	}
-	String(const char str[])
+	String(const char str[]):String(strlen(str) + 1)
 	{
-		size = 0;
-		while (str[size++]);
-		this->str = new char[size] {};
+	
 		for (int i = 0; str[i]; i++)this->str[i] = str[i];
 #ifdef DEBUG
 		cout << "Constructor:\t\t" << this << endl;
