@@ -58,6 +58,17 @@ public:
 		this->denominator = 1;
 		cout << "SingleArgConstructor:\t" << this << endl;
 	}
+	Fraction(double decimal)
+	{
+		//decimal - десятичный
+		decimal += 1e-10;
+		integer = decimal;	//неявное преобразование типов из 'double' в 'int'
+		decimal -= integer;
+		denominator = 1e+9;	//Максимально возможное значение числителя (9 десятичных разрядов)
+		//e - Exponent (оснвание системы счисления)
+		numerator = decimal * denominator;
+		reduce();
+	}
 	Fraction(int numerator, int denominator)
 	{
 		this->integer = 0;
@@ -127,6 +138,31 @@ public:
 	}
 
 	//					Methods:
+	Fraction& reduce()
+	{
+	
+		int more, less, rest;
+		if (numerator < denominator)
+		{
+			less = numerator;
+			more = denominator;
+		}
+		else
+		{
+			more = numerator;
+			less = denominator;
+		}
+		do
+		{
+			rest = more % less;
+			more = less;
+			less = rest;
+		} while (rest);
+		int GCD = more;	//GCD - Greatest Common Divisor
+		numerator /= GCD;
+		denominator /= GCD;
+		return *this;
+	}
 	Fraction& to_improper()
 	{
 		//Переводит дробь в неправильную (Целую часть интегрирует в числитель)
@@ -260,26 +296,6 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 	int numbers[3] = {};
 	int n = 0;
 
-	/*
-	---------------------------
-	Функция strtok() разбивает строку на токены;
-	Разделители (delimiters) - это символы, по которым нужно делить строку;
-	Токены (tokens) - это элементы, которые нужно достать из строки (это все что НЕ разделители);
-	Функция strtok() возвращает указатель на найденный токен, если токен не найден,
-	то функция возвращает 'nullptr';
-	pch - Pointer to Character, содержит указатель на первый символ токена.
-	---------------------------
-	*/
-	//https://legacy.cplusplus.com/reference/cstring/strtok/
-	for (char* pch = strtok(sz_input, delimiters); pch && n < 3; pch = strtok(NULL, delimiters))
-		numbers[n++] = atoi(pch);	//https://legacy.cplusplus.com/reference/cstdlib/atoi/
-	/*
-	---------------------------
-	Функция atoi() ASCII to Integer, принимает строку ASCII-сиволов, и возвращает целое число,
-	соответствуюзее этой строке.
-	---------------------------
-	*/
-
 	//for (int i = 0; i < n; i++)cout << numbers[i] << "\t"; cout << endl;
 
 	switch (n)
@@ -300,6 +316,7 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 //#define ISTREAM_OPERATOR
 //#define CONVERSIONS_BASICS
 //#define CONVERSION_FROM_OTHER_TO_CLASS
+//#define CONVERSIONS_FROM_CLASS_TO_OTHER
 
 void main()
 {
@@ -407,12 +424,13 @@ void main()
 	cout << B << endl;
 #endif // CONVERSION_FROM_OTHER_TO_CLASS
 
+#ifdef CONVERSIONS_FROM_CLASS_TO_OTHER
 	/*operator type()
-	{
-		....;
-		....;
-		....;
-	}*/
+{
+	....;
+	....;
+	....;
+}*/
 
 	Fraction A(2, 3, 4);
 	cout << A << endl;
@@ -421,6 +439,14 @@ void main()
 	cout << a << endl;
 	double b = A;
 	cout << b << endl;
+#endif // CONVERSIONS_FROM_CLASS_TO_OTHER
+
+	/*int i = 0;
+	i += 1;*/
+
+	Fraction A = 2.76;
+	cout << A << endl;
+
 }
 //Возврат объектов из функции.
 /*
