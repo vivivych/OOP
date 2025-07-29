@@ -15,7 +15,7 @@ class Fraction
 {
 	int integer;		//Целая часть
 	int numerator;		//Числитель
-	int denominator;	//Значенатель
+	int denominator;	///Значенатель
 public:
 	int get_integer()const
 	{
@@ -140,7 +140,7 @@ public:
 	//					Methods:
 	Fraction& reduce()
 	{
-	
+
 		int more, less, rest;
 		if (numerator < denominator)
 		{
@@ -276,17 +276,7 @@ std::ostream& operator<<(std::ostream& os, const Fraction& obj)
 }
 std::istream& operator>>(std::istream& cin, Fraction& obj)
 {
-	/*
-	------------------
-	5
-	1/2
-	2(3/4)
-	3 4/5
-	3.4/5
-	3,4/5
-	------------------
-	*/
-
+	
 	const int SIZE = 32;
 	char sz_input[SIZE] = {};	//sz_ - String Zero (Строка, заканчивающаяся нулем)
 	//is >> sz_input;
@@ -295,6 +285,25 @@ std::istream& operator>>(std::istream& cin, Fraction& obj)
 	const char delimiters[] = { '(', '/', ')', ' ', '.', ',', 0 };
 	int numbers[3] = {};
 	int n = 0;
+
+	/*
+	---------------------------
+	Функция strtok() разбивает строку на токены;
+	Разделители (delimiters) - это символы, по которым нужно делить строку;
+	Токены (tokens) - это элементы, которые нужно достать из строки (это все что НЕ разделители);
+	Функция strtok() возвращает указатель на найденный токен, если токен не найден,
+	то функция возвращает 'nullptr';
+	pch - Pointer to Character, содержит указатель на первый символ токена.
+	---------------------------
+	*/
+	for (char* pch = strtok(sz_input, delimiters); pch && n < 3; pch = strtok(NULL, delimiters))
+		numbers[n++] = atoi(pch);	
+	/*
+	---------------------------
+	Функция atoi() ASCII to Integer, принимает строку ASCII-сиволов, и возвращает целое число,
+	соответствуюзее этой строке.
+	---------------------------
+	*/
 
 	//for (int i = 0; i < n; i++)cout << numbers[i] << "\t"; cout << endl;
 
